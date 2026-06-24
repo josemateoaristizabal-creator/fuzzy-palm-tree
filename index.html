@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="COMETA es una plataforma BIM para visualizar, medir, coordinar y decidir sobre modelos 3D de construcción." />
+  <title>COMETA — BIM para construir con claridad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --deep-blue: #001A72;
+      --electric-blue: #2F7BFF;
+      --light-blue: #A9D2FF;
+      --ink: #050816;
+      --page: #F7F9FF;
+      --surface: #FFFFFF;
+      --soft: #EBEDFF;
+      --border: #D9DEEC;
+      --muted: #667085;
+      --glow: rgba(47, 123, 255, .22);
+      --nav-bg: rgba(247,249,255,.82);
+      --nav-border: rgba(217,222,236,.7);
+      --grid-line: rgba(0, 26, 114, .035);
+      --text-secondary: #475467;
+      --text-tertiary: #58657a;
+      --max: 1200px;
+    }
+    [data-theme="dark"] {
+      --deep-blue: #A9D2FF;
+      --electric-blue: #5B95FF;
+      --light-blue: #C9E3FF;
+      --ink: #F7FAFF;
+      --page: #050816;
+      --surface: #0B1024;
+      --soft: #111B3C;
+      --border: #23345E;
+      --muted: #AAB6CF;
+      --glow: rgba(91, 149, 255, .25);
+      --nav-bg: rgba(5,8,22,.78);
+      --nav-border: rgba(35,52,94,.75);
+      --grid-line: rgba(169,210,255,.055);
+      --text-secondary: #CCD7EC;
+      --text-tertiary: #B6C3DB;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--page); font-family: "Space Grotesk", sans-serif; overflow-x: hidden; }
+    body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .7; background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px); background-size: 44px 44px; mask-image: linear-gradient(to bottom, black, transparent 60%); }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(calc(100% - 40px), var(--max)); margin: 0 auto; }
+    .nav { position: sticky; top: 0; z-index: 20; background: var(--nav-bg); backdrop-filter: blur(18px); border-bottom: 1px solid var(--nav-border); }
+    .nav-inner { height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-family: Montserrat, sans-serif; letter-spacing: .16em; font-weight: 800; font-size: 13px; color: var(--deep-blue); }
+    .brand-mark { width: 34px; height: 34px; object-fit: contain; object-position: center 38%; border-radius: 8px; }
+    .nav-links { display: flex; gap: 22px; align-items: center; color: var(--text-secondary); font-size: 14px; }
+    .nav-links a:hover { color: var(--electric-blue); }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid transparent; min-height: 46px; padding: 0 18px; border-radius: 8px; font-weight: 700; font-size: 14px; transition: .2s ease; cursor: pointer; }
+    .button.primary { color: white; background: linear-gradient(135deg, var(--deep-blue), var(--electric-blue)); box-shadow: 0 12px 28px rgba(0, 26, 114, .18); }
+    .button.primary:hover { transform: translateY(-2px); box-shadow: 0 18px 34px rgba(0, 26, 114, .28); }
+    .button.secondary { color: var(--deep-blue); border-color: #B9C7EB; background: var(--surface); }
+    .button.secondary:hover { border-color: var(--electric-blue); box-shadow: 0 10px 24px rgba(47,123,255,.1); }
+    .hero { position: relative; padding: 86px 0 70px; }
+    .hero::after { content:""; position:absolute; width: 680px; height: 680px; border-radius: 50%; right: -260px; top: -210px; background: radial-gradient(circle, rgba(169,210,255,.72), rgba(47,123,255,.15) 38%, transparent 68%); pointer-events:none; }
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--deep-blue); font-family: Montserrat, sans-serif; text-transform: uppercase; letter-spacing: .16em; font-weight: 800; font-size: 11px; }
+    .eyebrow::before { content:""; width: 24px; height: 2px; background: var(--electric-blue); }
+    h1,h2,h3,p { margin-top: 0; }
+    h1 { margin: 18px 0 22px; max-width: 730px; font-family: Montserrat, sans-serif; font-size: clamp(40px, 5.2vw, 72px); line-height: .99; letter-spacing: -.055em; color: var(--deep-blue); }
+    h1 span { background: linear-gradient(95deg, var(--deep-blue), var(--electric-blue), #8ebfff); background-clip: text; -webkit-background-clip: text; color: transparent; }
+    .lead { max-width: 650px; color: var(--text-secondary); font-size: 18px; line-height: 1.6; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 34px; }
+    .trust { display: flex; gap: 23px; flex-wrap: wrap; color: var(--text-secondary); font-size: 13px; }
+    .trust-item { display: flex; align-items: center; gap: 8px; }
+    .tick { width: 19px; height: 19px; color: white; background: var(--electric-blue); border-radius: 50%; display:grid; place-items:center; font-size: 11px; font-weight: 800; }
+    .hero-visual { position: relative; min-height: 500px; }
+    .orbital { position:absolute; inset: 8% -12% 4% 3%; border: 1px solid rgba(47,123,255,.32); border-radius: 46% 54% 57% 43% / 58% 34% 66% 42%; transform: rotate(-20deg); }
+    .orbital::before { content:""; position:absolute; width: 40%; height: 40%; right: -9%; top: -8%; border-radius:50%; background: radial-gradient(circle, var(--light-blue), transparent 65%); filter: blur(8px); }
+    .visual-card { position: absolute; inset: 50px 0 18px 38px; padding: 12px; border-radius: 18px; background: linear-gradient(145deg, color-mix(in srgb, var(--surface) 94%, transparent), color-mix(in srgb, var(--soft) 84%, transparent)); border: 1px solid color-mix(in srgb, var(--surface) 88%, transparent); box-shadow: 0 30px 70px rgba(0,26,114,.2); transform: rotate(-3deg); overflow: hidden; }
+    .visual-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; border-radius: 10px; filter: saturate(1.04) contrast(1.02); }
+    .floating-chip { position:absolute; z-index:2; display:flex; align-items:center; gap: 10px; padding: 12px 14px; border:1px solid var(--border); background: color-mix(in srgb, var(--surface) 92%, transparent); border-radius: 10px; box-shadow: 0 15px 34px rgba(0,26,114,.16); font-size: 12px; font-weight:700; color:var(--ink); }
+    .floating-chip.one { left: -10px; top: 72px; }
+    .floating-chip.two { right: -20px; bottom: 38px; }
+    .pulse { width: 11px; height: 11px; border-radius: 50%; background: #30c77c; box-shadow: 0 0 0 5px rgba(48,199,124,.14); }
+    .mini-icon { width: 22px; height: 22px; border-radius: 6px; display:grid; place-items:center; background: var(--soft); color: var(--electric-blue); }
+    section { padding: 94px 0; }
+    .section-heading { max-width: 720px; margin-bottom: 42px; }
+    h2 { font-family: Montserrat, sans-serif; font-size: clamp(30px, 3.7vw, 48px); line-height: 1.08; letter-spacing: -.04em; color: var(--deep-blue); margin: 14px 0; }
+    .section-heading p { color: var(--text-secondary); font-size: 17px; line-height:1.55; }
+    .feature-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .feature { min-height: 260px; padding: 25px; border: 1px solid var(--border); border-radius: 12px; background: color-mix(in srgb, var(--surface) 90%, transparent); transition:.22s ease; }
+    .feature:hover { transform: translateY(-5px); border-color: #9cb9f7; box-shadow: 0 22px 44px rgba(0,26,114,.10); }
+    .feature-icon { width: 42px; height: 42px; display:grid; place-items:center; border-radius: 9px; color:white; font-size: 20px; background: linear-gradient(135deg, var(--deep-blue), var(--electric-blue)); }
+    .feature h3 { margin: 24px 0 11px; font-family: Montserrat, sans-serif; color: var(--deep-blue); font-size: 18px; }
+    .feature p { margin:0; color:var(--text-tertiary); font-size: 15px; line-height: 1.55; }
+    .showcase { background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 78%, transparent), color-mix(in srgb, var(--soft) 82%, transparent)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .showcase-grid { display:grid; grid-template-columns: .9fr 1.1fr; gap: 54px; align-items:center; }
+    .steps { display:grid; gap: 16px; }
+    .step { display:grid; grid-template-columns: 42px 1fr; gap: 14px; padding: 17px 0; border-bottom:1px solid var(--border); }
+    .step:last-child { border-bottom:0; }
+    .step-no { width: 33px; height:33px; display:grid; place-items:center; border:1px solid #9db9f7; color:var(--electric-blue); border-radius:50%; font-family:Montserrat,sans-serif; font-size:12px; font-weight:800; }
+    .step h3 { font-family: Montserrat, sans-serif; font-size:16px; margin:0 0 6px; color:var(--deep-blue); }
+    .step p { margin:0; color:var(--text-tertiary); line-height:1.45; font-size:14px; }
+    .device-frame { position:relative; border-radius: 22px; padding: 11px; border: 1px solid #b9caf2; background: linear-gradient(145deg, var(--surface), var(--soft)); box-shadow: 0 26px 52px rgba(0,26,114,.16); }
+    .device-frame img { display:block; width:100%; border-radius: 14px; aspect-ratio: 1.5 / 1; object-fit:cover; object-position: center top; }
+    .stat-band { display:grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .stat { background:var(--surface); padding: 24px; }
+    .stat strong { display:block; font-family:Montserrat,sans-serif; color:var(--electric-blue); font-size: 26px; letter-spacing:-.04em; }
+    .stat span { display:block; margin-top:7px; color:var(--text-tertiary); font-size:13px; line-height:1.35; }
+    .module-grid { display:grid; grid-template-columns: repeat(2,1fr); gap: 18px; }
+    .module { display:grid; grid-template-columns: 1fr 1fr; overflow:hidden; border: 1px solid var(--border); background:var(--surface); border-radius:14px; min-height:260px; }
+    .module-text { padding:26px; }
+    .module-text h3 { font-family:Montserrat,sans-serif; color:var(--deep-blue); margin:0 0 12px; font-size:20px; }
+    .module-text p { margin:0; color:var(--text-tertiary); line-height:1.55; font-size:14px; }
+    .module-img { padding:10px; background:linear-gradient(140deg,var(--soft),color-mix(in srgb, var(--electric-blue) 18%, var(--soft))); }
+    .module-img img { width:100%; height:100%; object-fit:cover; border-radius:8px; }
+    .cta { padding: 86px 0; }
+    .cta-box { position:relative; overflow:hidden; border-radius: 18px; padding: 60px; color:white; background: linear-gradient(125deg, #00104d 0%, var(--deep-blue) 44%, #1766e4 100%); box-shadow:0 28px 60px rgba(0,26,114,.27); }
+    .cta-box::before, .cta-box::after { content:""; position:absolute; border-radius:50%; border:1px solid rgba(255,255,255,.2); }
+    .cta-box::before { width:620px; height:620px; right:-260px; top:-420px; }
+    .cta-box::after { width:400px; height:400px; right:-140px; bottom:-250px; border-color:rgba(169,210,255,.55); }
+    .cta-content { position:relative; z-index:1; max-width:690px; }
+    .cta h2 { color:white; margin:0 0 16px; }
+    .cta p { color:#dceaff; margin:0 0 26px; font-size:17px; line-height:1.55; }
+    .cta .button.primary { background:white; color:var(--deep-blue); box-shadow:none; }
+    .cta .button.secondary { color:white; background:transparent; border-color:rgba(255,255,255,.55); }
+    footer { border-top:1px solid var(--border); padding: 26px 0 34px; color:var(--muted); font-size:13px; }
+    .footer-inner { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; }
+    .footer-brand { color:var(--deep-blue); font-family:Montserrat,sans-serif; letter-spacing:.14em; font-weight:800; }
+    .mobile-menu { display:none; }
+    .theme-toggle { width:42px; height:42px; padding:0; border:1px solid var(--border); border-radius:9px; background:var(--surface); color:var(--deep-blue); display:grid; place-items:center; cursor:pointer; font-size:18px; transition:.2s ease; }
+    .theme-toggle:hover { transform:translateY(-2px); border-color:var(--electric-blue); box-shadow:0 10px 24px rgba(47,123,255,.12); }
+    .theme-toggle .moon { display:none; }
+    [data-theme="dark"] .theme-toggle .sun { display:none; }
+    [data-theme="dark"] .theme-toggle .moon { display:inline; }
+    [data-theme="dark"] .hero::after { opacity:.5; }
+    [data-theme="dark"] .cta-box { box-shadow:0 28px 60px rgba(0,0,0,.42); }
+    @media (max-width: 920px) {
+      .hero-grid,.showcase-grid { grid-template-columns:1fr; }
+      .hero-visual { min-height: 460px; max-width: 650px; width: 100%; margin: 0 auto; }
+      .feature-grid { grid-template-columns:repeat(2,1fr); }
+      .module-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width: 680px) {
+      .container { width:min(calc(100% - 28px),var(--max)); }
+      .nav-inner { height:66px; }
+      .nav-links,.nav .button { display:none; }
+      .mobile-menu { display:inline-flex; border:0; background:transparent; color:var(--deep-blue); font-size:24px; cursor:pointer; }
+      .theme-toggle { width:38px; height:38px; }
+      .hero { padding: 58px 0 42px; }
+      h1 { font-size: 44px; }
+      .lead { font-size:16px; }
+      .hero-visual { min-height:330px; }
+      .visual-card { inset: 34px 5px 12px 15px; }
+      .floating-chip { font-size:10px; padding:9px 10px; }
+      .floating-chip.one { top:15px; left:0; }
+      .floating-chip.two { right:-4px; bottom:5px; }
+      section { padding:65px 0; }
+      .feature-grid { grid-template-columns:1fr; }
+      .stat-band { grid-template-columns:repeat(2,1fr); }
+      .module { grid-template-columns:1fr; }
+      .module-img { min-height:200px; }
+      .cta-box { padding:36px 24px; }
+      .hero-actions { margin:26px 0; }
+      .button { width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#inicio" aria-label="COMETA inicio">
+        <img class="brand-mark" src="assets/cometa-logo.png" alt="Logo COMETA" /> COMETA
+      </a>
+      <div class="nav-links" aria-label="Navegación principal">
+        <a href="#producto">Producto</a>
+        <a href="#flujo">Cómo funciona</a>
+        <a href="#modulos">Módulos</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="theme-toggle" type="button" aria-label="Activar modo noche" aria-pressed="false" title="Cambiar tema">
+          <span class="sun">☼</span><span class="moon">☾</span>
+        </button>
+        <a class="button primary" href="#contacto">Solicitar demo <span>→</span></a>
+      </div>
+      <button class="mobile-menu" onclick="document.querySelector('#contacto').scrollIntoView({behavior:'smooth'})" aria-label="Solicitar demo">↗</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">BIM operativo para construcción</div>
+          <h1>El modelo 3D deja de ser un archivo. <span>Se vuelve decisión.</span></h1>
+          <p class="lead">COMETA centraliza la visualización BIM, las mediciones, la coordinación y el seguimiento técnico para que equipos de obra, arquitectura e ingeniería trabajen con más contexto y menos fricción.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#contacto">Conocer COMETA <span>→</span></a>
+            <a class="button secondary" href="#producto">Explorar plataforma</a>
+          </div>
+          <div class="trust">
+            <div class="trust-item"><span class="tick">✓</span> Visualización GLB / BIM</div>
+            <div class="trust-item"><span class="tick">✓</span> Herramientas de medición</div>
+            <div class="trust-item"><span class="tick">✓</span> Flujos por proyecto</div>
+          </div>
+        </div>
+        <div class="hero-visual" aria-label="Vista previa del visor BIM COMETA">
+          <div class="orbital"></div>
+          <div class="floating-chip one"><span class="mini-icon">⌖</span> Selección BIM contextual</div>
+          <div class="floating-chip two"><span class="pulse"></span> Modelo sincronizado</div>
+          <div class="visual-card"><img src="assets/viewer-dashboard.png" alt="Interfaz del visor BIM COMETA" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="producto">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Una plataforma, menos pasos</div>
+          <h2>Hecha para trabajar sobre el modelo, no alrededor de él.</h2>
+          <p>La experiencia COMETA prioriza acciones directas, información contextual y paneles compactos para que el modelo siempre sea el centro de la conversación.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature"><div class="feature-icon">◫</div><h3>Viewer BIM 3D</h3><p>Navega modelos GLB derivados de IFC, selecciona elementos y consulta información técnica sin salir del flujo de trabajo.</p></article>
+          <article class="feature"><div class="feature-icon">⌗</div><h3>Mediciones rápidas</h3><p>Activa la última herramienta usada con un click. Mantén presionado para cambiar entre distancia, área o ángulo.</p></article>
+          <article class="feature"><div class="feature-icon">◌</div><h3>Información contextual</h3><p>Inspecciona propiedades, materiales, notas y estados asociados a cada elemento con paneles que no bloquean el viewport.</p></article>
+          <article class="feature"><div class="feature-icon">▦</div><h3>Configuraciones guardadas</h3><p>Conserva materiales, notas y decisiones de diseño para cada usuario, cliente, proyecto o versión del modelo.</p></article>
+          <article class="feature"><div class="feature-icon">↗</div><h3>Coordinación operativa</h3><p>Relaciona tickets, evidencias y tareas con objetos BIM para pasar de una observación a una acción trazable.</p></article>
+          <article class="feature"><div class="feature-icon">◔</div><h3>Preparado para IA y MCP</h3><p>Datos estructurados y herramientas conectables para generar análisis, reportes y visualizaciones bajo demanda.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase" id="flujo">
+      <div class="container showcase-grid">
+        <div>
+          <div class="eyebrow">Flujo operativo</div>
+          <h2>Del modelo a la acción en segundos.</h2>
+          <div class="steps">
+            <div class="step"><div class="step-no">01</div><div><h3>Carga y explora el proyecto</h3><p>Accede al modelo, niveles, jerarquías y metadata BIM desde una experiencia visual clara.</p></div></div>
+            <div class="step"><div class="step-no">02</div><div><h3>Selecciona, mide y documenta</h3><p>Usa herramientas flotantes cerca del punto de interacción y guarda el contexto técnico relevante.</p></div></div>
+            <div class="step"><div class="step-no">03</div><div><h3>Coordina y da seguimiento</h3><p>Convierte selecciones del modelo en notas, tickets, evidencias, reportes o métricas de avance.</p></div></div>
+          </div>
+        </div>
+        <div class="device-frame"><img src="assets/measurement-tool.png" alt="Herramienta de medición COMETA" /></div>
+      </div>
+    </section>
+
+
+    <section id="modulos">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Módulos conectados</div>
+          <h2>Una base visual lista para crecer con el proyecto.</h2>
+          <p>COMETA está planteado como un sistema BIM modular: el viewer es el núcleo y cada capacidad se conecta sin perder el contexto del activo o del modelo.</p>
+        </div>
+        <div class="module-grid">
+          <article class="module"><div class="module-text"><h3>Gestión de materiales</h3><p>Asigna materiales PBR por elemento o grupo, revisa variantes y conserva configuraciones para cada alternativa de diseño.</p></div><div class="module-img"><img src="assets/viewer-dashboard.png" alt="Gestión de materiales en COMETA" /></div></article>
+          <article class="module"><div class="module-text"><h3>Tickets y coordinación</h3><p>Prepara un Kanban simple por rol, vinculado con elementos BIM, estados, responsables y evidencia de resolución.</p></div><div class="module-img"><img src="assets/kanban.png" alt="Tablero Kanban COMETA" /></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta" id="contacto">
+      <div class="container">
+        <div class="cta-box">
+          <div class="cta-content">
+            <div class="eyebrow" style="color:#dceaff"><span style="background:#a9d2ff"></span> Construcción con contexto</div>
+            <h2>Convierte cada vista del modelo en una decisión mejor informada.</h2>
+            <p>COMETA reúne visualización 3D, medición y coordinación en una experiencia pensada para equipos de construcción que necesitan avanzar con claridad.</p>
+            <div class="hero-actions"><a class="button primary" href="mailto:hola@cometa.app?subject=Solicitud%20de%20demo%20COMETA">Solicitar una demo <span>→</span></a><a class="button secondary" href="#inicio">Volver al inicio</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const toggle = document.querySelector('.theme-toggle');
+      const root = document.documentElement;
+      const stored = localStorage.getItem('cometa-theme');
+      const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initial = stored || (systemDark ? 'dark' : 'light');
+      const applyTheme = (theme) => {
+        root.dataset.theme = theme;
+        toggle.setAttribute('aria-pressed', String(theme === 'dark'));
+        toggle.setAttribute('aria-label', theme === 'dark' ? 'Activar modo día' : 'Activar modo noche');
+      };
+      applyTheme(initial);
+      toggle.addEventListener('click', () => {
+        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        localStorage.setItem('cometa-theme', next);
+        applyTheme(next);
+      });
+    })();
+  </script>
+
+  <footer>
+    <div class="container footer-inner"><div class="footer-brand">COMETA</div><div>Futuro · Innovación · Arquitectura · Movimiento</div><div>© 2026 COMETA</div></div>
+  </footer>
+</body>
+</html>
