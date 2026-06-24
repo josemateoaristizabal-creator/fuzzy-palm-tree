@@ -2,6 +2,7 @@
 
 Landing page estática construida con HTML y CSS. Incluye el logo y la identidad visual de COMETA, junto con capturas del visor BIM del material fuente.
 
+
 ## Abrir
 
 Abre `index.html` en cualquier navegador moderno.
